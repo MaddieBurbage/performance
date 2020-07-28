@@ -11,7 +11,8 @@
  * returns: the CSR's value
  */
 long readFromCSR(long address) {
-  long csrValue = read_csr(address);
+  long csrValue;
+  asm volatile ("csrr %[rd], %[csr]": [rd]"=r"(csrValue) : [csr]"r"(address));
   printf("Value at %lu: %lu \n", address, csrValue);
   return csrValue;
 }
