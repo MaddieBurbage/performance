@@ -10,7 +10,7 @@
 
 //*** PARAMETERS ***
 // The CSR to test
-#if !defined(CYCLE) || !defined(TIME) || !defined(INSTRET)
+#if !defined(CYCLE) && !defined(TIME) && !defined(INSTRET)
 #define INSTRET
 #endif
 
@@ -25,7 +25,7 @@
 // CSR readable-addresses (accessible to the User-level)
 #define CYCLEADDR 0xc00
 #define TIMEADDR 0xc01
-#define INSTADDR 0xc01
+#define INSTADDR 0xc02
 
 // Stringify macro address
 #define readADDR(addr) read_csr(addr)
@@ -72,6 +72,7 @@ void printTable(long unsigned *results) {
   long unsigned perSecond;
   int minPerSecond = INT_MAX;
   int avgPerSecond = 0;
+  int maxPerSecond = 0;
   char *header = PRETTYMODE;
 
   // Headers
@@ -86,6 +87,9 @@ void printTable(long unsigned *results) {
     if(perSecond < minPerSecond) {
       minPerSecond = perSecond;
     }
+    if(perSecond > maxPerSecond) {
+      maxPerSecond = perSecond;
+    }
     avgPerSecond += perSecond;
     
     printf("   %-15d %-15lu %-15lu %-15lu   \n", i, results[i], elapsed, perSecond);
@@ -93,7 +97,9 @@ void printTable(long unsigned *results) {
   avgPerSecond /= REPETITIONS - 1; // Calculate average
 
   // Overall stats
-  printf("Minimum %s per second: %d  Average %s per second: %d \n", header, minPerSecond, header, avgPerSecond);
+  printf("Minimum %s per second: %d \n", header, minPerSecond);
+  printf("Average %s per second: %d \n", header, avgPerSecond);
+  printf("Maximum %s per second %d \n", header, maxPerSecond);
   
 }
   
