@@ -26,17 +26,23 @@ long readFromCSR() {
 
 int main(int argc, char* argv[]) {
   int repetitions;
-  
+  int pause = 1;
+
   if(argc < 2) {
-    fprintf(stderr, "Usage: %s repetitions\n", argv[0]);
-    fprintf(stderr, "repetitions: how many seconds in a row to check the values\n");
+    fprintf(stderr, "Usage: %s repetitions [pause]\n", argv[0]);
+    fprintf(stderr, "repetitions: how many times in a row to check the values\n");
+    fprintf(stderr, "pause: the time (in seconds) between each check\n");
     exit(-1);
   }
   repetitions = atoi(argv[1]);
 
+  if(argc == 3) {
+    pause = atoi(argv[2]);
+  }
+
   //Read from the CSR repetitions times
   for(int i = 0; i < repetitions; i++) {
-    sleep(1);
+    sleep(pause);
     readFromCSR();
   }
   
