@@ -41,7 +41,8 @@ int main(int argc, char* argv[]) {
   }
 
   //Read from the CSR repetitions times
-  for(int i = 0; i < repetitions; i++) {
+  readFromCSR();
+  for(int i = 1; i < repetitions; i++) {
     sleep(pause);
     readFromCSR();
   }
