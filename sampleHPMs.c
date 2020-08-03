@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <string.h>
+#include <time.h>
 
 //*** PARAMETERS ***
 // The CSR to test
@@ -26,7 +27,6 @@
  */
 void printTable(long unsigned *results) {
   int i;
-  long unsigned elapsed;
   long unsigned perSecond;
   int minPerSecond = INT_MAX;
   int avgPerSecond = 0;
@@ -35,7 +35,7 @@ void printTable(long unsigned *results) {
 
   // Headers
   printf("%s: \n", header);
-  printf("** %-15s %-15s %-15s %-15s **\n", "Trial", "Total", "Elapsed", "Per Second");
+  printf("** %-15s %-15s %-15s **\n", "Trial", "Total", "Per Second");
 
   // Data
   for(i = 0; i < REPETITIONS; i++) {
@@ -48,7 +48,7 @@ void printTable(long unsigned *results) {
     }
     avgPerSecond += perSecond;
 
-    printf("   %-15d %-15lu %-15lu %-15lu   \n", i, results[i], elapsed, perSecond);
+    printf("   %-15d %-15lu %-15lu   \n", i, results[i], perSecond);
   }
   avgPerSecond /= REPETITIONS - 1; // Calculate average
 
@@ -60,25 +60,31 @@ void printTable(long unsigned *results) {
 }
 
 int controlComputations (const char *path) {
-  char *nextProgram = strtok(path, '/');
-  const char *program;
+  char *tokenizable = strdup(path);
+  char *nextProgram = strtok(tokenizable, "/");
+  char *program;
   pid_t cpid;
+  time_t start, finish;
 
+  start = time(NULL);
+  finish = start + REPETITIONS * DURATION;
   while(nextProgram != NULL) { // Get program name from path
     program = nextProgram;
-    nextProgram = strtok(path, '/');
+    nextProgram = strtok(NULL, "/");
   }
+  free(tokenizable);
 
   do {
     cpid = fork();
     if(cpid == 0) { // Child runs a function
-      execv(path, &program);
+      printf("child running %s %s \n", path, program);
+      execvp(path, &program);
     } else if(cpid < 0) { // Parent waits for child before starting another
       return -1;
     } else {
       waitpid(cpid, 0,0);
     }
-  } while(cpid != 0);
+  } while(cpid != 0 && time(NULL) < finish);
   return 0;
 }
 
@@ -86,8 +92,9 @@ int main(int argc, char *argv[]) {
   long unsigned measured[REPETITIONS];
 
   if(argc < 2) {
-    fprintf(stderr, "Usage: %s path", argv[0]);
-    fprintf(stderr, "path: the relative path of a program to loop over");
+    fprintf(stderr, "Usage: %s path\n", argv[0]);
+    fprintf(stderr, "path: the relative path of a program to loop over\n");
+    exit(-1);
   }
 
   pid_t pid = fork(); // Child process to control computation/RoCC
