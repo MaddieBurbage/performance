@@ -3,6 +3,7 @@
 
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <string.h>
 
 //*** PARAMETERS ***
 // The CSR to test
@@ -58,18 +59,20 @@ void printTable(long unsigned *results) {
 
 }
 
-int controlComputations (char *path) {
+int controlComputations (const char *path) {
   char *nextProgram = strtok(path, '/');
-  char *program;
+  const char *program;
+  pid_t cpid;
+
   while(nextProgram != NULL) { // Get program name from path
     program = nextProgram;
     nextProgram = strtok(path, '/');
   }
 
   do {
-    pid_t cpid = fork();
+    cpid = fork();
     if(cpid == 0) { // Child runs a function
-      execv(&path, &program);
+      execv(path, &program);
     } else if(cpid < 0) { // Parent waits for child before starting another
       return -1;
     } else {
@@ -94,6 +97,5 @@ int main(int argc, char *argv[]) {
     trackCSR(measured);
     waitpid(pid, 0, 0);
     printTable(measured);
-
-
+  }
 }
