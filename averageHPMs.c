@@ -15,8 +15,6 @@
 // How many tests to run
 #define REPETITIONS 5
 
-// Which CSR to test: CYCLE, TIME, INSTRET
-
 // CSR-sampling code
 #include "timeCycles.c"
 

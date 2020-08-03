@@ -6,8 +6,8 @@
 
 //*** PARAMETERS ***
 // The CSR to test
-#if !defined(CYCLE) && !defined(TIME) && !defined(INSTRET)
-#define INSTRET
+#if !defined(IPS) && !defined(RPS) && !defined(SPS)
+#define SPS
 #endif
 
 // How many seconds between each sample
@@ -15,8 +15,6 @@
 
 // How many samples to run
 #define REPETITIONS 30
-
-// Which CSR to test: IPS, RPS, SPS
 
 // CSR-sampling code
 #include "timeCycles.c"
@@ -63,7 +61,7 @@ void printTable(long unsigned *results) {
 int controlComputations (char *path) {
   char *nextProgram = strtok(path, '/');
   char *program;
-  while(nextProgram != NULL { // Get program name from path
+  while(nextProgram != NULL) { // Get program name from path
     program = nextProgram;
     nextProgram = strtok(path, '/');
   }
