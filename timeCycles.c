@@ -25,19 +25,19 @@
 #ifdef CYCLE
 #define readCSR readADDR(CYCLEADDR)
 #define PRETTYMODE "cycle"
-#elif TIME
+#elif defined(TIME)
 #define readCSR readADDR(TIMEADDR)
 #define PRETTYMODE "time"
-#elif INSTRET
+#elif defined(INSTRET)
 #define readCSR readADDR(INSTADDR)
 #define PRETTYMODE "instret"
-#elif IPS
+#elif defined(IPS)
 #define readCSR readADDR(IPSADDR)
 #define PRETTYMODE "Instructions"
-#elif RPS
+#elif defined(RPS)
 #define readCSR readADDR(RPSADDR)
 #define PRETTYMODE "RoCC instructions"
-#elif SPS
+#elif defined(SPS)
 #define readCSR readADDR(SPSADDR)
 #define PRETTYMODE "RoCC stalls"
 #endif
