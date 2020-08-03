@@ -60,13 +60,19 @@ void printTable(long unsigned *results) {
 
 }
 
-int controlComputations (char *program) {
-  char *path = "./" + program
+int controlComputations (char *path) {
+  char *nextProgram = strtok(path, '/');
+  char *program;
+  while(nextProgram != NULL { // Get program name from path
+    program = nextProgram;
+    nextProgram = strtok(path, '/');
+  }
+
   do {
     pid_t cpid = fork();
-    if(cpid == 0) { // Grandchild runs a function
+    if(cpid == 0) { // Child runs a function
       execv(&path, &program);
-    } else if(cpid < 0) {
+    } else if(cpid < 0) { // Parent waits for child before starting another
       return -1;
     } else {
       waitpid(cpid, 0,0);
@@ -79,8 +85,8 @@ int main(int argc, char *argv[]) {
   long unsigned measured[REPETITIONS];
 
   if(argc < 2) {
-    fprintf(stderr, "Usage: %s program", argv[0]);
-    fprintf(stderr, "program: the name of the same-directory file to run");
+    fprintf(stderr, "Usage: %s path", argv[0]);
+    fprintf(stderr, "path: the relative path of a program to loop over");
   }
 
   pid_t pid = fork(); // Child process to control computation/RoCC
