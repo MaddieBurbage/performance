@@ -6,6 +6,9 @@
 #include <string.h>
 #include <time.h>
 
+#include <errno.h>
+extern int errno ;
+
 //*** PARAMETERS ***
 // The CSR to test
 #if !defined(IPS) && !defined(RPS) && !defined(SPS)
@@ -61,24 +64,24 @@ void printTable(long unsigned *results) {
 
 int controlComputations (const char *path) {
   char *tokenizable = strdup(path);
-  char *nextProgram = strtok(tokenizable, "/");
-  char *program;
+  char *namePointer = strchr(tokenizable, '/') + 1;
+  char name[20];
+  char *const args[] = {name, NULL};
   pid_t cpid;
   time_t start, finish;
 
+  strcpy(name, namePointer);
+
   start = time(NULL);
   finish = start + REPETITIONS * DURATION;
-  while(nextProgram != NULL) { // Get program name from path
-    program = nextProgram;
-    nextProgram = strtok(NULL, "/");
-  }
   free(tokenizable);
 
   do {
     cpid = fork();
     if(cpid == 0) { // Child runs a function
-      printf("child running %s %s \n", path, program);
-      execvp(path, &program);
+      execv(path, args);
+      int err = errno;
+      fprintf(stderr, "Execv error: %d\n", err);
     } else if(cpid < 0) { // Parent waits for child before starting another
       return -1;
     } else {

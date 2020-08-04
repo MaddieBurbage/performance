@@ -28,5 +28,5 @@ int main(int argc, char *argv[]) {
       primes[p++] = i;
     }
   }
-  printf("Primes found: 1st: %d 50th: %d 100th: %d \n", primes[0], primes[49], primes[99]);
+  //printf("Primes found: 1st: %d 50th: %d 100th: %d \n", primes[0], primes[49], primes[99]);
 }
