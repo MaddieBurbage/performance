@@ -8,23 +8,21 @@
 
 #define TESTSIZE 20
 #define DATA int
-#define TYP 3
-
-static inline void testAccelerator(DATA *array, int command) {
-  int i = 0;
-  int response = -1;
-  for(; i < TESTSIZE; i++) {
-    ROCC_INSTRUCTION_DSS(0, response, array[i], TYP, command);
-    printf("Received %d from the command %d \n", response, command);
-  }
-}
+#define TYP 2
 
 int main(void) {
   DATA memArray[TESTSIZE];
   int i;
-
-  testAccelerator(memArray, 1);
-  testAccelerator(memArray, 0);
+  DATA response = -1;
+  
+  for(i = 0; i < TESTSIZE; i++) {
+    ROCC_INSTRUCTION_DSS(0, response, &memArray[i], TYP, 1);
+    printf("Received %d from the command %d \n", response, 1);
+  }
+  for(i = 0; i < TESTSIZE; i++) {
+    ROCC_INSTRUCTION_DSS(0, response, &memArray[i], TYP, 0);
+    printf("Received %d from the command %d \n", response, 0);
+  }
   for(i = 0; i < TESTSIZE; i++) {
     printf("Saw %d at spot %d \n", memArray[i], i);
   }
