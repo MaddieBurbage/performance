@@ -3,8 +3,10 @@ Tracking hardware performance of the lowRISC processor and our extensions of it.
 
 ---
 
-## Files
-- `encoding.h` is source from [Spike](https://github.com/riscv/riscv-isa-sim/blob/master/riscv/encoding.h), providing handy macros for RISC-V instructions within C.
+## Contents
+- `accelerators` contains the source and tests for accelerators on chipyard and lowRISC. Right now the only accelerator is MemTest, which usees RoCC instructions to test out the RoCC mem interface.
+- `encoding.h` is source from [riscv-opcodes](https://github.com/riscv/riscv-opcodes) as part of riscv-tools, providing handy macros for RISC-V instructions within C.
+- `rocc.h` is source from Chipyard's example [tests](https://github.com/ucb-bar/chipyard/tree/master/tests).
 - `readCSR.c` will read from a single CSR address and print the result.
 - `averageHPMs.c` retrieves the values of instret (instructions retired), time, and cycle, and calculates their changes over each second, while another process runs.
 - `sampleHPMs.c` retrieves the values of custom per-second HPMs: IPS (instructions), RPS (RoCC instructions), and SPS (RoCC-stalled cycles). 
